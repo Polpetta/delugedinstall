@@ -15,3 +15,5 @@ With this Script you're able to install a BitTorrent client in your "home Server
 			</ul>
 	<li>Auto-update
 </ul>
+
+Many thanks to Franco Rugolon for helped me with English translation!
