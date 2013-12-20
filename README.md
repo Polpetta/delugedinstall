@@ -21,7 +21,7 @@ It's only compatible with Debian-like sistems (for now).
 
 Many thanks to Franco Rugolon for helped me with English translation!
 
-<h2>Changelog</2>
+<h2>Changelog</h2>
 
 <ul>
 	<li>Version 0.3:
