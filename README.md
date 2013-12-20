@@ -20,3 +20,12 @@ It's only compatible with Debian-like sistems (for now).
 <h2>Special Thanks</h2>
 
 Many thanks to Franco Rugolon for helped me with English translation!
+
+<h2>Changelog</2>
+
+<ul>
+	<li>Version 0.3:
+		<ul>
+			<li>Add integration with Github!
+		</ul>
+</ul>
