@@ -1,6 +1,35 @@
 #!/bin/bash
 clear
 versione=0.3
+function user_psswd
+{
+	users=( $(cat /etc/passwd | grep /home | cut -d: -f1) )
+	echo "|"`date +%T`"|" "Utenti trovati in questi computer:"
+	for ((elemento=0; elemento < ${#users[@]}; elemento++))
+		do
+			echo "$elemento) ${users[$elemento]}"
+		done
+	if [ ${#users[@]} == 1 ]
+		then
+			echo "|"`date +%T`"|" "Found ${#users[@]} user"
+			username=${users[0]}
+			echo "|"`date +%T`"|" "L'utente è stato automaticamente selezionato, verrà usato $username"
+		else
+			echo "|"`date +%T`"|" "Found ${#users[@]} users"
+			read -p "Seleziona l'utente desiderato scrivendo il numero corrispondente: " numero_user
+			for ((i=0; i < ${#users[@]}; i++))
+				do
+					if [ $numero_user = $i ]
+					then
+						username=${users[$i]}
+					fi
+				done
+			echo "|"`date +%T`"|" "È stato selezionato l'utente" $username
+	fi
+	echo "|"`date +%T`"|" "Generating a random password..."
+	password=( $(dd if=/dev/random bs=1 count=16 2>/dev/null | hexdump -e '16/1 "%02x" "\n"') )
+	echo "|"`date +%T`"|" "Generated password is $password"
+}
 function installazione
 {
 #verrà scaricato il file "tmpversione" e i dati verranno ricaricati in un array.
@@ -100,8 +129,9 @@ case "$1" in
             installazione
             ;;
 esac
-read -p "Username: " username
-echo "Password per $username: " ; read -s password
+user_psswd
+#read -p "Username: " username
+#echo "Password per $username: " ; read -s password
 echo "|"`date +%T`"|" "Starting script's execution..."
 echo "|"`date +%T`"|" "Checking what OS is used..." `uname -v`
 echo "|"`date +%T`"|" "Installing Deluge with web interface and dependances..."
