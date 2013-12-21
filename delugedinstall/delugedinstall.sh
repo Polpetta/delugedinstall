@@ -118,8 +118,8 @@ echo "$username:$password:10" >> ~/.config/deluge/auth
 echo "|"`date +%T`"|" "Initiating Deluge's web interface..."
 deluge-web > /dev/null &
 echo "|"`date +%T`"|" "Creating a download folder in /home/$username/Download..."
-mkdir /home/$username/Download
-mkdir /home/$username/Download/.temp
+mkdir -p /home/$username/Download
+mkdir -p /home/$username/Download/.temp
 echo "|"`date +%T`"|" "Configuring Deluge for auto start..."
 sleep 1
 wget -q -O /etc/default/deluge-daemon http://dl.delugedinstall.altervista.org/dl/permanent/default.deluge-daemon.txt
