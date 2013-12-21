@@ -4,7 +4,7 @@ versione=0.3
 function user_psswd
 {
 	users=( $(cat /etc/passwd | grep /home | cut -d: -f1) )
-	echo "|"`date +%T`"|" "Utenti trovati in questi computer:"
+	echo "|"`date +%T`"|" "User founded in this computer:"
 	for ((elemento=0; elemento < ${#users[@]}; elemento++))
 		do
 			echo "$elemento) ${users[$elemento]}"
