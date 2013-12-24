@@ -1,6 +1,23 @@
 #!/bin/bash
 clear
 versione=0.3
+function remote
+{
+#questa funzione permetterà al client deluged di essere controllato da un altro computer connettendosi al demone tramite deluge-gtk
+	apt-get install deluge-console -y
+	echo "|"`date +%T`"|" "Eseguo il demone deluged..."
+	deluged > /dev/null &
+	sleep 5
+	echo "|"`date +%T`"|" "Abilito il controllo remoto"
+	deluge-console "config -s allow_remote True"
+	deluge-console "config allow_remote"
+	echo "|"`date +%T`"|" "Riavvio deluge..."
+	pkill deluged
+	sleep 1
+	deluged
+	sleep 5
+	echo "Processo terminato. Per connettersi è necessario digitare nel client l'indirizzo "`hostname -i`" con l'user selezionato e la password generata automaticamente prima, ovvero $password."
+}
 function user_psswd
 {
 	users=( $(cat /etc/passwd | grep /home | cut -d: -f1) )
@@ -123,13 +140,25 @@ controlloversione
 case "$1" in
         --install)
             installazione
+            user_psswd
             ;;
          
         -i)
             installazione
+            user_psswd
             ;;
+        --allow-remote)
+	    user_psswd
+	    remote
+	    ;;
+	-R)
+	    user_psswd
+	    remote
+	    ;;
+	*)
+	    user_psswd
+	    ;;
 esac
-user_psswd
 #read -p "Username: " username
 #echo "Password per $username: " ; read -s password
 echo "|"`date +%T`"|" "Starting script's execution..."
@@ -139,7 +168,7 @@ sleep 1
 apt-get update
 apt-get install deluged python-mako deluge-web -y
 echo "|"`date +%T`"|" "Starting Deluge..."
-deluged
+deluged > /dev/null &
 sleep 5
 echo "|"`date +%T`"|" "Confiuration's file will be modified"
 echo "|"`date +%T`"|" "Note: a backup of the file ~/.config/deluge/auth will be created. it will be renamed auth.old"
@@ -157,6 +186,7 @@ sed -i "4 i DELUGED_USER=\"$username\"" /etc/default/deluge-daemon
 wget -q -O /etc/init.d/deluge-daemon http://dl.delugedinstall.altervista.org/dl/permanent/init.d.deluge-daemon.txt
 chmod 755 /etc/init.d/deluge-daemon
 update-rc.d deluge-daemon defaults
+echo "Your local ip is: " `hostname -i`". Connect to "`hostname -i`":8112 to see the Web UI interface."
 read -p "|"`date +%T`"| Installation complete. Do you want to reboot the system? (y/n)?" risposta
 if [ "$risposta" = "y" ]
 then
