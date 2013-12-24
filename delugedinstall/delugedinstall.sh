@@ -1,6 +1,20 @@
 #!/bin/bash
 clear
 versione=0.3
+function unistall
+{
+#il demone verrà rimosso insieme all'interfaccia grafica. Importante eseguire un'approfondita pulizia.
+	apt-get purge deluged python-mako deluge-web deluge-console -y
+	rm -rf ~/.config/deluge/
+	echo "È necessario selezionare l'utente usato per l'installazione per rimuovere correttamente tutti i file."
+	user
+	read -p "|"`date +%T`"| Do you want remove \"Download\" path? (y/n)" risposta
+	if [ "$risposta" = "y" ]
+	then
+		rm -rf /home/$username/Download
+	else
+		echo "Unistall Complete!"
+}
 function aiuto
 {
 #vengono descritti in dettaglio i comandi di questo script
@@ -9,6 +23,7 @@ function aiuto
 function installazione
 {
 #questa funzione permetterà l'installazione del demone deluge.
+	clear
 	echo "###############################################################"
 	echo "#                                                             #"
 	echo "#           Deluge Installer for Debian-like systems          #"
@@ -29,6 +44,15 @@ function installazione
 	echo "# pressing Ctrl+c at the same time.                           #"
 	echo "###############################################################"
 	sleep 3
+	read -p "|"`date +%T`"| È caldamente consigliato aggiornare lo script all'ultima versione stabile prima di procedere con l'installazione. Vuoi aggiornare? (y/n)" risposta
+	if [ $risposta == "y" ]
+	then
+		controlloversione
+	user
+	echo "|"`date +%T`"|" "Generating a random password..."
+	password=( $(dd if=/dev/random bs=1 count=16 2>/dev/null | hexdump -e '16/1 "%02x" "\n"') )
+	echo "|"`date +%T`"|" "Generated password is $password"
+	sleep 1
 	echo "|"`date +%T`"|" "Starting script's execution..."
 	echo "|"`date +%T`"|" "Checking what OS is used..." `uname -v`
 	echo "|"`date +%T`"|" "Installing Deluge with web interface and dependances..."
@@ -44,7 +68,7 @@ function installazione
 	echo "$username:$password:10" >> ~/.config/deluge/auth
 	echo "|"`date +%T`"|" "Initiating Deluge's web interface..."
 	deluge-web > /dev/null &
-	echo "|"`date +%T`"|" "Creating a download folder in /home/$username/Download..."
+	echo "|"`date +%T`"|" "Cdeluge-consolereating a download folder in /home/$username/Download..."
 	mkdir -p /home/$username/Download
 	mkdir -p /home/$username/Download/.temp
 	echo "|"`date +%T`"|" "Configuring Deluge for auto start..."
@@ -58,11 +82,23 @@ function installazione
 		-ir)
 		    remote
 		    ;;
+		-irs)
+		    remote
+		    ;;
+		-isr)
+		    remote
+		    ;;
+		-ris)
+		    remote
+		    ;;
+		-rsi)
+		    remote
+		    ;;
 		*)
 		    ;;
 	esac
 	echo "|"`date +%T`"|" "Your local ip is: " `hostname -i`". Connect to "`hostname -i`":8112 to see the Web UI interface."
-	read -p "|"`date +%T`"| Installation complete. Do you want to reboot the system? (y/n)?" risposta
+	read -p "|"`date +%T`"| Installation complete. Do you want to reboot the system? (Y/n)?" risposta
 	if [ "$risposta" = "y" ]
 	then
 		echo "System will reboot!"
@@ -81,7 +117,7 @@ function remote
 	deluge-console "config allow_remote"
 	echo "|"`date +%T`"|" "Processo terminato. Per connettersi è necessario digitare nel client l'indirizzo "`hostname -i`" con l'user selezionato e la password generata automaticamente prima, ovvero $password.È necessario un riavvio del sistema"
 }
-function user_psswd
+function user
 {
 	users=( $(cat /etc/passwd | grep /home | cut -d: -f1) )
 	echo "|"`date +%T`"|" "User founded in this computer:"
@@ -106,9 +142,6 @@ function user_psswd
 				done
 			echo "|"`date +%T`"|" "È stato selezionato l'utente" $username
 	fi
-	echo "|"`date +%T`"|" "Generating a random password..."
-	password=( $(dd if=/dev/random bs=1 count=16 2>/dev/null | hexdump -e '16/1 "%02x" "\n"') )
-	echo "|"`date +%T`"|" "Generated password is $password"
 }
 function salva
 {
@@ -156,7 +189,7 @@ function controlloversione
 			echo "|"`date +%T`"|" "You have the last available version. The script doesn't need any update."
 			echo "|"`date +%T`"|" "Deluge daemon's installation will start shortly."
 	else
-		echo "|"`date +%T`"|" "An update is needed!"
+		echo "|"`date +%T`"|" "An update (or downgrade to stable version) is needed!"
 		sleep 1
 		echo "|"`date +%T`"|" "You can find new version's changelog at the following link: ${versionescaricata[2]}"
 		sleep 2
@@ -175,6 +208,15 @@ fi
 echo "|"`date +%T`"|" "Checking for the existance of a newer version of the script..."
 controlloversione
 case "$1" in
+	-u)
+	    controlloversione
+	    #controlla solamente se la versione in uso è l'ultima versione stabile rilasciata. Non clona il repository.
+	    exit 0
+	    ;;
+	--unistall)
+	    unistall
+	    exit 0
+	    ;;
 	-i)
 	    installazione
 	    exit 0
@@ -195,6 +237,30 @@ case "$1" in
 	-ir)
 	    installazione
 	    #l'abilitazione del controllo remoto verrà al "case" presente nella funzione installazione.
+	    exit 0
+	    ;;
+	-irs)
+	    installazione
+	    remote
+	    salva
+	    exit 0
+	    ;;
+	-isr)
+	    installazione
+	    remote
+	    salva
+	    exit 0
+	    ;;
+	-ris)
+	    installazione
+	    remote
+	    salva
+	    exit 0
+	    ;;
+	-rsi)
+	    installazione
+	    remote
+	    salva
 	    exit 0
 	    ;;
 	--help)
