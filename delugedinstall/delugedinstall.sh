@@ -16,7 +16,7 @@ function remote
 	sleep 1
 	deluged
 	sleep 5
-	echo "Processo terminato. Per connettersi è necessario digitare nel client l'indirizzo "`hostname -i`" con l'user selezionato e la password generata automaticamente prima, ovvero $password."
+	echo "|"`date +%T`"|" "Processo terminato. Per connettersi è necessario digitare nel client l'indirizzo "`hostname -i`" con l'user selezionato e la password generata automaticamente prima, ovvero $password."
 }
 function user_psswd
 {
@@ -147,14 +147,6 @@ case "$1" in
             installazione
             user_psswd
             ;;
-        --allow-remote)
-	    user_psswd
-	    remote
-	    ;;
-	-R)
-	    user_psswd
-	    remote
-	    ;;
 	*)
 	    user_psswd
 	    ;;
@@ -186,7 +178,17 @@ sed -i "4 i DELUGED_USER=\"$username\"" /etc/default/deluge-daemon
 wget -q -O /etc/init.d/deluge-daemon http://dl.delugedinstall.altervista.org/dl/permanent/init.d.deluge-daemon.txt
 chmod 755 /etc/init.d/deluge-daemon
 update-rc.d deluge-daemon defaults
-echo "Your local ip is: " `hostname -i`". Connect to "`hostname -i`":8112 to see the Web UI interface."
+case "$1" in
+        --allow-remote)
+	    remote
+	    ;;
+	-R)
+	    remote
+	    ;;
+	*)
+	    ;;
+esac
+echo "|"`date +%T`"|" "Your local ip is: " `hostname -i`". Connect to "`hostname -i`":8112 to see the Web UI interface."
 read -p "|"`date +%T`"| Installation complete. Do you want to reboot the system? (y/n)?" risposta
 if [ "$risposta" = "y" ]
 then
