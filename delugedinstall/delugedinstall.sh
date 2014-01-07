@@ -3,10 +3,10 @@ clear
 versione=0.3
 function unistall
 {
-#il demone verrà rimosso insieme all'interfaccia grafica. Importante eseguire un'approfondita pulizia.
+#The Daemon will be removed, such as graphic interface. It's important to run a deep cleaning.
 	apt-get purge deluged python-mako deluge-web deluge-console -y
 	rm -rf ~/.config/deluge/
-	echo "È necessario selezionare l'utente usato per l'installazione per rimuovere correttamente tutti i file."
+	echo "It's necessary to select the user used for the installation to remove all the files in the correct way."
 	user
 	read -p "|"`date +%T`"| Do you want remove \"Download\" path? (y/n)" risposta
 	if [ "$risposta" = "y" ]
@@ -44,7 +44,7 @@ function installazione
 	echo "# pressing Ctrl+c at the same time.                           #"
 	echo "###############################################################"
 	sleep 3
-	read -p "|"`date +%T`"| È caldamente consigliato aggiornare lo script all'ultima versione stabile prima di procedere con l'installazione. Vuoi aggiornare? (y/n)" risposta
+	read -p "|"`date +%T`"| It's strongly suggested to upgrade the script to the last stable version before to proceed with installation. Do you want to upgrade? (y/n)" risposta
 	if [ $risposta == "y" ]
 	then
 		controlloversione
@@ -68,7 +68,7 @@ function installazione
 	echo "$username:$password:10" >> ~/.config/deluge/auth
 	echo "|"`date +%T`"|" "Initiating Deluge's web interface..."
 	deluge-web > /dev/null &
-	echo "|"`date +%T`"|" "Cdeluge-consolereating a download folder in /home/$username/Download..."
+	echo "|"`date +%T`"|" "Creating a download folder in /home/$username/Download..."
 	mkdir -p /home/$username/Download
 	mkdir -p /home/$username/Download/.temp
 	echo "|"`date +%T`"|" "Configuring Deluge for auto start..."
@@ -112,10 +112,10 @@ function remote
 {
 #questa funzione permetterà al client deluged di essere controllato da un altro computer connettendosi al demone tramite deluge-gtk
 	apt-get install deluge-console -y
-	echo "|"`date +%T`"|" "Abilito il controllo remoto"
+	echo "|"`date +%T`"|" "Remote control is being authorized"
 	deluge-console "config -s allow_remote True"
 	deluge-console "config allow_remote"
-	echo "|"`date +%T`"|" "Processo terminato. Per connettersi è necessario digitare nel client l'indirizzo "`hostname -i`" con l'user selezionato e la password generata automaticamente prima, ovvero $password.È necessario un riavvio del sistema"
+	echo "|"`date +%T`"|" "Task completed. In order to connect is required to digit in your client the address "`hostname -i`" with the selected user and the automatically generated password before, such as $password. A system reboot is necessary"
 }
 function user
 {
@@ -129,10 +129,10 @@ function user
 		then
 			echo "|"`date +%T`"|" "Found ${#users[@]} user"
 			username=${users[0]}
-			echo "|"`date +%T`"|" "L'utente è stato automaticamente selezionato, verrà usato $username"
+			echo "|"`date +%T`"|" "User has been automatically selected, $username will be used"
 		else
 			echo "|"`date +%T`"|" "Found ${#users[@]} users"
-			read -p "Seleziona l'utente desiderato scrivendo il numero corrispondente: " numero_user
+			read -p "Select the number of the used user: " numero_user
 			for ((i=0; i < ${#users[@]}; i++))
 				do
 					if [ $numero_user = $i ]
@@ -140,7 +140,7 @@ function user
 						username=${users[$i]}
 					fi
 				done
-			echo "|"`date +%T`"|" "È stato selezionato l'utente" $username
+			echo "|"`date +%T`"|" "User" $username "has been selected"
 	fi
 }
 function salva
@@ -268,7 +268,7 @@ case "$1" in
 	    exit 0
 	    ;;
 	*)
-	    echo "|"`date +%T`"|" "Nessun input corretto specificato. Digitare \"--help\" per ottenere maggiori informazioni."
+	    echo "|"`date +%T`"|" "The input isn't valid. Digit \"--help\" in order to get more informations."
 	    exit 1
 	    ;;
 esac
