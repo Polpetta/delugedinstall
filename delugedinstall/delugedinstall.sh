@@ -14,6 +14,7 @@ function unistall
 		rm -rf /home/$username/Download
 	else
 		echo "Unistall Complete!"
+	fi
 }
 function aiuto
 {
