@@ -49,6 +49,7 @@ function installazione
 	if [ $risposta == "y" ]
 	then
 		controlloversione
+	fi
 	user
 	echo "|"`date +%T`"|" "Generating a random password..."
 	password=( $(dd if=/dev/random bs=1 count=16 2>/dev/null | hexdump -e '16/1 "%02x" "\n"') )
