@@ -213,64 +213,53 @@ case "$1" in
 	-u)
 	    controlloversione
 	    #controlla solamente se la versione in uso è l'ultima versione stabile rilasciata. Non clona il repository.
-	    exit 0
 	    ;;
 	--unistall)
 	    unistall
-	    exit 0
 	    ;;
 	-i)
 	    installazione
-	    exit 0
 	    ;;
         -s)
             salva
-            exit 0
             ;;
 	-r)
 	    remote
-	    exit 0
 	    ;;
 	-is)
 	    installazione
 	    salva
-	    exit 0
 	    ;;
 	-ir)
 	    installazione
 	    #l'abilitazione del controllo remoto verrà al "case" presente nella funzione installazione.
-	    exit 0
 	    ;;
 	-irs)
 	    installazione
 	    remote
 	    salva
-	    exit 0
 	    ;;
 	-isr)
 	    installazione
 	    remote
 	    salva
-	    exit 0
 	    ;;
 	-ris)
 	    installazione
 	    remote
 	    salva
-	    exit 0
 	    ;;
 	-rsi)
 	    installazione
 	    remote
 	    salva
-	    exit 0
 	    ;;
 	--help)
 	    aiuto
-	    exit 0
 	    ;;
 	*)
 	    echo "|"`date +%T`"|" "The input isn't valid. Digit \"--help\" in order to get more informations."
 	    exit 1
 	    ;;
 esac
+exit 0
